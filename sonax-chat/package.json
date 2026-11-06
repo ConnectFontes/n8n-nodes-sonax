@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "Sonax Chat community node for n8n with 4 operations.",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "homepage": "https://sonax.net.br/",
   "repository": {
     "type": "git",

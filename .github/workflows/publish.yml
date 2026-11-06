@@ -1,6 +1,8 @@
 name: Publish
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       package:
@@ -42,6 +44,21 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm test
+      # On every push to main, publish only the package(s) whose version isn't on npm yet,
+      # so pushing an unrelated commit never retries an already-published version.
+      - name: Check published versions
+        id: versions
+        run: |
+          for dir in sonax-voip sonax-chat; do
+            name=$(node -p "require('./$dir/package.json').name")
+            version=$(node -p "require('./$dir/package.json').version")
+            key=$(echo "$dir" | tr '-' '_')
+            if npm view "$name@$version" version >/dev/null 2>&1; then
+              echo "$key=false" >> "$GITHUB_OUTPUT"
+            else
+              echo "$key=true" >> "$GITHUB_OUTPUT"
+            fi
+          done
       # @n8n/node-cli's own prepublishOnly hook refuses a bare `npm publish` (it requires
       # RELEASE_MODE, only set by `n8n-node release`). `n8n-node release` detects CI via the
       # GITHUB_ACTIONS env var (set automatically here) and then lints, builds and runs
@@ -51,14 +68,18 @@ jobs:
       # first publish, before Trusted Publishing can be configured for it on npmjs.com); otherwise
       # npm uses the OIDC credential from id-token: write above.
       - name: Publish sonax-voip
-        if: ${{ inputs.package == 'both' || inputs.package == 'sonax-voip' }}
+        if: >-
+          steps.versions.outputs.sonax_voip == 'true' &&
+          (github.event_name != 'workflow_dispatch' || inputs.package == 'both' || inputs.package == 'sonax-voip')
         run: |
           [ -n "$NPM_TOKEN" ] && npm config set //registry.npmjs.org/:_authToken "$NPM_TOKEN"
           npm run release --workspace sonax-voip
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Publish sonax-chat
-        if: ${{ inputs.package == 'both' || inputs.package == 'sonax-chat' }}
+        if: >-
+          steps.versions.outputs.sonax_chat == 'true' &&
+          (github.event_name != 'workflow_dispatch' || inputs.package == 'both' || inputs.package == 'sonax-chat')
         run: |
           [ -n "$NPM_TOKEN" ] && npm config set //registry.npmjs.org/:_authToken "$NPM_TOKEN"
           npm run release --workspace sonax-chat
