@@ -1,0 +1,27 @@
+{
+  "name": "sonax-n8n-workspace",
+  "version": "0.3.0",
+  "private": true,
+  "description": "Development workspace for the independent Sonax VoIP and Sonax Chat community packages.",
+  "workspaces": [
+    "sonax-voip",
+    "sonax-chat"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "lint": "npm run lint --workspaces",
+    "test": "npm run build && npm run test:unit --workspaces && node --test tests/*.test.cjs",
+    "test:n8n": "npm run build && node tests/n8n/editor.cjs && node tests/n8n/smoke.cjs",
+    "pack:all": "npm run build && npm pack --workspace sonax-voip --pack-destination sonax-voip && npm pack --workspace sonax-chat --pack-destination sonax-chat",
+    "dev:voip": "npm run dev --workspace sonax-voip --",
+    "dev:chat": "npm run dev --workspace sonax-chat --"
+  },
+  "devDependencies": {
+    "@n8n/node-cli": "0.40.3",
+    "@types/node": "24.9.1",
+    "eslint": "9.32.0",
+    "n8n-core": "2.23.1",
+    "n8n-workflow": "2.16.0",
+    "typescript": "5.9.2"
+  }
+}

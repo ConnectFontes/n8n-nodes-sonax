@@ -1,0 +1,62 @@
+{
+  "name": "n8n-nodes-sonax-chat",
+  "version": "0.1.0",
+  "description": "Sonax Chat community node for n8n with 4 operations.",
+  "license": "MIT",
+  "homepage": "https://sonax.net.br/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ConnectFontes/n8n-nodes-sonax.git",
+    "directory": "sonax-chat"
+  },
+  "bugs": {
+    "url": "https://github.com/ConnectFontes/n8n-nodes-sonax/issues"
+  },
+  "keywords": [
+    "n8n-community-node-package"
+  ],
+  "author": {
+    "name": "Connect",
+    "email": "leonardo.hfns@gmail.com"
+  },
+  "scripts": {
+    "build": "n8n-node build",
+    "build:watch": "tsc --watch",
+    "dev": "n8n-node dev",
+    "lint": "n8n-node lint",
+    "lint:fix": "n8n-node lint --fix",
+    "test": "npm run build && npm run test:unit",
+    "test:unit": "node --test tests/*.test.cjs",
+    "release": "n8n-node release",
+    "prepublishOnly": "npm run lint && npm test && n8n-node prerelease"
+  },
+  "files": [
+    "dist/credentials",
+    "dist/nodes",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "examples"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "strict": true,
+    "credentials": [
+      "dist/credentials/SonaxChatApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/SonaxChat/SonaxChat.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@n8n/node-cli": "0.40.3",
+    "@types/node": "24.9.1",
+    "eslint": "9.32.0",
+    "n8n-core": "2.23.1",
+    "n8n-workflow": "2.16.0",
+    "typescript": "5.9.2"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  }
+}

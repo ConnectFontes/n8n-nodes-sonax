@@ -1,0 +1,18 @@
+dist
+node_modules
+.env
+.env.*
+.ENV
+!.env.example
+*.tgz
+.dev/
+
+# Not part of the packages; kept locally only.
+/Espeificação de Escopo - Componentes Sonax API-1.pdf
+/unnamed.png
+
+# Internal/dev-only material, not shown in the public repo.
+/.agents/
+/AGENTS.md
+/CLAUDE.md
+/docs/

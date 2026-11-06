@@ -1,0 +1,52 @@
+name: Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: 'Which package to publish'
+        required: true
+        type: choice
+        default: 'both'
+        options:
+          - both
+          - sonax-voip
+          - sonax-chat
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
+      - name: Update npm (needed for OIDC trusted publishing)
+        run: 'npm install -g npm@latest'
+      - name: Check publication metadata
+        run: |
+          node -e "
+            for (const dir of ['sonax-voip', 'sonax-chat']) {
+              const pkg = require('./' + dir + '/package.json');
+              if (!pkg.repository?.url) throw new Error('Set the real repository URL in ' + dir + '/package.json before publishing');
+            }
+          "
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      # Configure npm Trusted Publishing for n8n-nodes-sonax-voip and n8n-nodes-sonax-chat
+      # (this repository + this workflow file) on npmjs.com before running this.
+      - name: Publish sonax-voip
+        if: ${{ inputs.package == 'both' || inputs.package == 'sonax-voip' }}
+        run: npm publish --workspace sonax-voip --provenance --access public
+      - name: Publish sonax-chat
+        if: ${{ inputs.package == 'both' || inputs.package == 'sonax-chat' }}
+        run: npm publish --workspace sonax-chat --provenance --access public

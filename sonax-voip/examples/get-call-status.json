@@ -1,0 +1,47 @@
+{
+  "name": "Sonax VoIP - Get call status",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "d447467e-d4e1-49f1-9b29-9151f42ea6bf",
+      "name": "When clicking Execute Workflow",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "getCallStatus",
+        "callId": "REPLACE_WITH_AN_EXISTING_CALL_ID"
+      },
+      "id": "5f762765-f20f-498c-929a-21a1584f1ab3",
+      "name": "Sonax VoIP",
+      "type": "n8n-nodes-sonax-voip.sonaxVoip",
+      "typeVersion": 1,
+      "position": [
+        260,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking Execute Workflow": {
+      "main": [
+        [
+          {
+            "node": "Sonax VoIP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
