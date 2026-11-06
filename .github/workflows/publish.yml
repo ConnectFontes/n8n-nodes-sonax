@@ -42,11 +42,25 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm test
-      # Configure npm Trusted Publishing for n8n-nodes-sonax-voip and n8n-nodes-sonax-chat
-      # (this repository + this workflow file) on npmjs.com before running this.
+      # @n8n/node-cli's own prepublishOnly hook refuses a bare `npm publish` (it requires
+      # RELEASE_MODE, only set by `n8n-node release`). `n8n-node release` detects CI via the
+      # GITHUB_ACTIONS env var (set automatically here) and then lints, builds and runs
+      # `npm publish` itself with provenance enabled. `npm run release --workspace <pkg>` runs
+      # that command with its cwd set to the package, which is what `release` needs to publish
+      # the right one. If NPM_TOKEN is set, this authenticates with it (works for a package's very
+      # first publish, before Trusted Publishing can be configured for it on npmjs.com); otherwise
+      # npm uses the OIDC credential from id-token: write above.
       - name: Publish sonax-voip
         if: ${{ inputs.package == 'both' || inputs.package == 'sonax-voip' }}
-        run: npm publish --workspace sonax-voip --provenance --access public
+        run: |
+          [ -n "$NPM_TOKEN" ] && npm config set //registry.npmjs.org/:_authToken "$NPM_TOKEN"
+          npm run release --workspace sonax-voip
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Publish sonax-chat
         if: ${{ inputs.package == 'both' || inputs.package == 'sonax-chat' }}
-        run: npm publish --workspace sonax-chat --provenance --access public
+        run: |
+          [ -n "$NPM_TOKEN" ] && npm config set //registry.npmjs.org/:_authToken "$NPM_TOKEN"
+          npm run release --workspace sonax-chat
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
