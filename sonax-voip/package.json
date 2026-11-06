@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-sonax-voip",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Sonax VoIP community node for n8n with 9 operations.",
   "license": "MIT",
   "publishConfig": {

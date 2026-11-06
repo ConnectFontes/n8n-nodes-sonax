@@ -3,7 +3,6 @@ import { voiceProperties } from './description';
 import { loadOptions } from '../shared/methods/LoadOptions';
 import { VOICE_URL } from '../shared/transport/Constants';
 
-// eslint-disable-next-line @n8n/community-nodes/node-usable-as-tool -- O upload de contatos e a gravação usam dados binários do fluxo.
 export class SonaxVoip implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Sonax VoIP',
@@ -14,6 +13,7 @@ export class SonaxVoip implements INodeType {
 		subtitle: '={{$parameter["operation"]}}',
 		description: 'Manage Sonax VoIP calls, dialer campaigns, contacts, and recordings',
 		defaults: { name: 'Sonax VoIP' },
+		usableAsTool: true,
 		inputs: [NodeConnectionTypes.Main],
 		outputs: [NodeConnectionTypes.Main],
 		credentials: [{ name: 'sonaxVoiceApi', required: true }],

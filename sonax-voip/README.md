@@ -74,7 +74,7 @@ Import the [call-status example](examples/get-call-status.json), select your Son
 - **Get Call Recording** writes audio to the binary field set in *Output Binary Field* (default `data`). If Sonax answers with a link or JSON instead of audio, that is returned as JSON.
 - **Dates and times** follow the formats in Sonax's documentation: campaign start/end time `HH:mm:ss`, scheduled contact time `YYYY-MM-DD HH:mm:ss` (in the PBX time zone), weekdays 1-7 as configured in your PBX.
 - The Sonax API sometimes reports failures with HTTP 200 and an error body. The node turns those into regular n8n errors, so *Continue On Fail* and error workflows behave as expected.
-- This node's binary upload and recording operations prevent automatic AI tool exposure.
+- This node can also be used as an AI agent tool. Binary-input/output operations (Add Contacts File to Campaign, Get Call Recording) depend on binary data flowing through the workflow and are not practical to call from an agent; prefer the other operations for AI-driven use.
 
 ## Validation
 

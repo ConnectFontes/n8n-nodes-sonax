@@ -69,7 +69,7 @@ jobs:
       # npm uses the OIDC credential from id-token: write above.
       - name: Publish sonax-voip
         if: >-
-          steps.versions.outputs.sonax_voip == 'true' &&
+          !cancelled() && steps.versions.outputs.sonax_voip == 'true' &&
           (github.event_name != 'workflow_dispatch' || inputs.package == 'both' || inputs.package == 'sonax-voip')
         run: |
           [ -n "$NPM_TOKEN" ] && npm config set //registry.npmjs.org/:_authToken "$NPM_TOKEN"
@@ -78,7 +78,7 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Publish sonax-chat
         if: >-
-          steps.versions.outputs.sonax_chat == 'true' &&
+          !cancelled() && steps.versions.outputs.sonax_chat == 'true' &&
           (github.event_name != 'workflow_dispatch' || inputs.package == 'both' || inputs.package == 'sonax-chat')
         run: |
           [ -n "$NPM_TOKEN" ] && npm config set //registry.npmjs.org/:_authToken "$NPM_TOKEN"
